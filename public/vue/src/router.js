@@ -65,12 +65,29 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
 
   // redirect to login page if not logged in and trying to access a restricted page
-  const publicPages = ['/login', '/register', '/forgot-password'];
-  const authRequired = !publicPages.includes(to.path);
-  const loggedIn = localStorage.getItem('user');
+  const publicPages = ['/login', '/register', '/forgot-password']
+  const authRequired = !publicPages.includes(to.path)
+  const user = localStorage.getItem('user')
 
-  if (authRequired && !loggedIn) {
-    return next('/login');
+  if(authRequired) {
+    if(!user) {
+      return next('/login')
+    }
+
+    try {
+      const userDetails = JSON.parse(user)
+      const loginTime = parseInt(localStorage.getItem('lastLoginTime'))
+      const maxTime = loginTime + userDetails.sessionAgeSeconds * 1000
+
+      // if the session has expired
+      if(isNaN(loginTime) || maxTime < new Date().valueOf()) {
+        localStorage.removeItem('user')
+        return next('/login')
+      }
+    } catch(ex) {
+      localStorage.removeItem('user')
+      return next('/login')
+    }
   }
 
   next();

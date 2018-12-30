@@ -70,6 +70,7 @@
             this.$Spin.hide();
 
             if(response.status === 200) {
+              localStorage.setItem('lastLoginTime', new Date().valueOf())
               localStorage.setItem('user', response.bodyText);
               this.$emit("authenticated", true);
               this.$router.replace({ name: "home" });
