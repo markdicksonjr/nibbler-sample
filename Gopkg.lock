@@ -140,7 +140,7 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:97b4a197950c8ac349104c61fbd667fc70e8aef9cbb462015300d0ad9328110f"
+  digest = "1:7b0b8df3a20319a2f7a7362c0ccc9087ae5f52f70b82e4eb75e8a17c4fe97cc7"
   name = "github.com/markdicksonjr/nibbler"
   packages = [
     ".",
@@ -154,8 +154,8 @@
     "user/database/sql",
   ]
   pruneopts = "UT"
-  revision = "16a05feace1dd0117b3c6873cf3f8fb44b86b088"
-  version = "v0.3.6"
+  revision = "44fc86d99cfded78ec582868538473b827a84d5b"
+  version = "v0.3.7"
 
 [[projects]]
   digest = "1:4a49346ca45376a2bba679ca0e83bec949d780d4e927931317904bad482943ec"

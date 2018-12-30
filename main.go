@@ -48,9 +48,9 @@ func main() {
 	// tie into the same DB as the operational database
 	sessionExtension := session.Extension{
 		StoreConnector: connectors.SqlStoreConnector{
-			SqlExtension: &sqlExtension,
-			Secret:      "dumbsecret",
-			MaxAgeMs:    60 * 60 * 24 * 15, // 15 days
+			SqlExtension:	&sqlExtension,
+			Secret:      	"dumbsecret",
+			MaxAgeSeconds:	60 * 60 * 24 * 15, // 15 days
 		},
 		SessionName: "dumbcookie",
 	}
