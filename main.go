@@ -15,25 +15,21 @@ import (
 
 func main() {
 
-	// allocate logger
-	var logger nibbler.Logger = nibbler.DefaultLogger{}
-
 	// allocate configuration
 	config, err := nibbler.LoadConfiguration(nil)
-	config.StaticDirectory = "./public/vue/dist"
 
 	// any error is fatal at this point
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	// prepare models for initialization
-	var models []interface{}
-	models = append(models, user.User{})
+	config.StaticDirectory = "./public/vue/dist"
 
 	// allocate the sql extension, with all models
 	sqlExtension := sql.Extension{
-		Models: models,
+		Models: []interface{} {
+			user.User{},
+		},
 	}
 
 	// allocate user extension, providing sql extension to it
@@ -74,8 +70,9 @@ func main() {
 		EmailVerificationRedirect:"http://localhost:3000/#/verify-email",
 	}
 
-	// prepare extensions for initialization
-	extensions := []nibbler.Extension{
+	// initialize the application
+	appContext := nibbler.Application{}
+	if err := appContext.Init(config, nibbler.DefaultLogger{}, []nibbler.Extension{
 		&sqlExtension,
 		&userExtension,
 		&sessionExtension,
@@ -84,11 +81,7 @@ func main() {
 		&core.Extension{
 			AuthExtension: &userLocalAuthExtension,
 		},
-	}
-
-	// initialize the application
-	appContext := nibbler.Application{}
-	if err := appContext.Init(config, &logger, &extensions); err != nil {
+	}); err != nil {
 		log.Fatal(err.Error())
 	}
 

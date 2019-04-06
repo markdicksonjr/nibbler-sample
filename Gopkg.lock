@@ -100,14 +100,6 @@
   version = "v0.3.6"
 
 [[projects]]
-  branch = "master"
-  digest = "1:44bc6eaa5a1f52113d229a8716ab126b427a1a0e820dc4299eeaae8e66f15f08"
-  name = "github.com/jameskeane/bcrypt"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "c3cd44c1e20fec46baad45b108a45be93394dc8d"
-
-[[projects]]
   digest = "1:af20574f4a85d55078bae1840d00e6c1af65d18e8ae0ad5e199b03bd18902cd5"
   name = "github.com/jinzhu/gorm"
   packages = [
@@ -140,7 +132,7 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:9cacc703bde214f52694f02705f8abf19a98ff74700b1599b9499db639c8e284"
+  digest = "1:197021665c21fb35e534fee08aa090a7be80f0b1f01d5eb2b705d45b6585aa03"
   name = "github.com/markdicksonjr/nibbler"
   packages = [
     ".",
@@ -154,8 +146,8 @@
     "user/database/sql",
   ]
   pruneopts = "UT"
-  revision = "2c6188bd73091c36059aaca0b8c19822ab5a6909"
-  version = "v0.3.8"
+  revision = "c003b1c0ba8a420845e6058bbf323b0d6f014b79"
+  version = "v0.5.1"
 
 [[projects]]
   digest = "1:4a49346ca45376a2bba679ca0e83bec949d780d4e927931317904bad482943ec"
@@ -214,6 +206,17 @@
   packages = ["."]
   pruneopts = "UT"
   revision = "137864aca927cbee4054644cea080cfa6c8eddf7"
+
+[[projects]]
+  branch = "master"
+  digest = "1:9d5b5d543996dd584da1db1e0de1926f3e4c3a8dba0fa2f8db70f3ebee2342e0"
+  name = "golang.org/x/crypto"
+  packages = [
+    "bcrypt",
+    "blowfish",
+  ]
+  pruneopts = "UT"
+  revision = "38d8ce5564a5b71b2e3a00553993f1b9a7ae852f"
 
 [[projects]]
   branch = "master"
