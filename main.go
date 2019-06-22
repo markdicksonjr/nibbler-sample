@@ -85,6 +85,14 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
+	// create a test user, if it does not exist
+	emailVal := "someone@example.com"
+	password := "test123"
+	_, _ = userExtension.Create(&user.User{
+		Email:    &emailVal,
+		Password: &password,
+	})
+
 	// run the app
 	if err = appContext.Run(); err != nil {
 		log.Fatal(err.Error())

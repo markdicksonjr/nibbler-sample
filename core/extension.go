@@ -12,7 +12,7 @@ type Extension struct {
 }
 
 func (s *Extension) AddRoutes(context *nibbler.Application) error {
-	context.GetRouter().HandleFunc("/api/ok", s.AuthExtension.EnforceLoggedIn(func (w http.ResponseWriter, _ *http.Request) {
+	context.GetRouter().HandleFunc("/api/ok", s.AuthExtension.EnforceLoggedIn(func(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-Type", "application/json")
 		w.Write([]byte(`{"result": "OK"}`))
