@@ -4,7 +4,7 @@ A sample web app built atop of [Nibbler](https://github.com/markdicksonjr/nibble
 password, and email validation features out of the box.
 
 ## Requirements
-- Go v1.9+
+- Go v1.12+ (unless you want to try to build without mod)
 - SendGrid API key
 - Dep (optional)
 
@@ -12,8 +12,6 @@ password, and email validation features out of the box.
 
 The only thing that must be configured to really play around with this sample is a SendGrid
 API Key.  Set it in the SENDGRID_API_KEY environment variable.  To build and run the app:
-
-`dep ensure`
 
 `cd public/vue && npm install && npm run build && cd -`
 
@@ -32,9 +30,9 @@ as Heroku.
 
 ## Database
 
-By default, an in-memory database driven by sqlite will be used.  To use SQL or elasticsearch,
-set the DATABASE_URL environment variable appropriately.
+By default, an in-memory database driven by sqlite will be used.  To use a persistent SQL database, set 
+the DATABASE_URL environment variable appropriately.
 
 ## UI
 
-The UI will be served by Nibbler (by default, out of the ./public directory).  It is written with Vue 3.
+The UI will be served by Nibbler (by default, out of the ./public directory).  It is written with Vue 2.
