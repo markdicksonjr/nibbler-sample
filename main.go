@@ -27,7 +27,7 @@ func main() {
 
 	// allocate the sql extension, with all models
 	sqlExtension := sql.Extension{
-		Models: []interface{} {
+		Models: []interface{}{
 			user.User{},
 		},
 	}
@@ -44,9 +44,9 @@ func main() {
 	// tie into the same DB as the operational database
 	sessionExtension := session.Extension{
 		StoreConnector: connectors.SqlStoreConnector{
-			SqlExtension:	&sqlExtension,
-			Secret:      	"dumbsecret",
-			MaxAgeSeconds:	60 * 60 * 24 * 15, // 15 days
+			SqlExtension:  &sqlExtension,
+			Secret:        "dumbsecret",
+			MaxAgeSeconds: 60 * 60 * 24 * 15, // 15 days
 		},
 		SessionName: "dumbcookie",
 	}
@@ -56,18 +56,18 @@ func main() {
 
 	// allocate user local auth extension
 	userLocalAuthExtension := local.Extension{
-		SessionExtension:       &sessionExtension,
-		UserExtension:          &userExtension,
-		Sender:     			&sendgridExtension,
-		PasswordResetEnabled:   true,
-		PasswordResetFromName:  "Nibbler Sample",
-		PasswordResetFromEmail: "noreply@nibblersample.com",
-		PasswordResetRedirect:  "http://localhost:3000/#/reset-password",
-		RegistrationEnabled:	true,
-		EmailVerificationEnabled:true,
+		SessionExtension:           &sessionExtension,
+		UserExtension:              &userExtension,
+		Sender:                     &sendgridExtension,
+		PasswordResetEnabled:       true,
+		PasswordResetFromName:      "Nibbler Sample",
+		PasswordResetFromEmail:     "noreply@nibblersample.com",
+		PasswordResetRedirect:      "http://localhost:3000/#/reset-password",
+		RegistrationEnabled:        true,
+		EmailVerificationEnabled:   true,
 		EmailVerificationFromName:  "Nibbler Sample",
-		EmailVerificationFromEmail:"noreply@nibblersample.com",
-		EmailVerificationRedirect:"http://localhost:3000/#/verify-email",
+		EmailVerificationFromEmail: "noreply@nibblersample.com",
+		EmailVerificationRedirect:  "http://localhost:3000/#/verify-email",
 	}
 
 	// initialize the application
@@ -87,7 +87,7 @@ func main() {
 
 	// create a test user, if it does not exist
 	emailVal := "someone@example.com"
-	password := "test123"
+	password, _ := local.GeneratePasswordHash("tester123")
 	_, _ = userExtension.Create(&user.User{
 		Email:    &emailVal,
 		Password: &password,

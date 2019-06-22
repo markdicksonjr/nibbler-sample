@@ -1,4 +1,4 @@
-module markdicksonjr/nibbler-sample
+module github.com/markdicksonjr/nibbler-sample
 
 go 1.12
 
@@ -16,9 +16,9 @@ require (
 	github.com/imdario/mergo v0.3.6
 	github.com/jinzhu/gorm v1.9.2
 	github.com/jinzhu/inflection v0.0.0-20180308033659-04140366298a
+	github.com/kr/pty v1.1.3 // indirect
 	github.com/lib/pq v1.0.0
-	github.com/markdicksonjr/nibbler v0.5.1
-	github.com/markdicksonjr/nibbler-sample v0.0.0-20190406124325-1e8746e9a165 // indirect
+	github.com/markdicksonjr/nibbler v0.6.1
 	github.com/mattn/go-sqlite3 v1.10.0
 	github.com/micro/go-config v0.8.0
 	github.com/sendgrid/rest v2.4.1+incompatible
