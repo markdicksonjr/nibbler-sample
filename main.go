@@ -2,21 +2,39 @@ package main
 
 import (
 	"github.com/markdicksonjr/nibbler"
-	"github.com/markdicksonjr/nibbler-sample/core"
-	"github.com/markdicksonjr/nibbler/database/sql"
-	"github.com/markdicksonjr/nibbler/mail/outbound/sendgrid"
+	"github.com/markdicksonjr/nibbler-mail-outbound/sendgrid"
+	sql "github.com/markdicksonjr/nibbler-sql"
+	"github.com/markdicksonjr/nibbler-sql/session"
+	userSql "github.com/markdicksonjr/nibbler-sql/user"
 	"github.com/markdicksonjr/nibbler/session"
-	"github.com/markdicksonjr/nibbler/session/connectors"
 	"github.com/markdicksonjr/nibbler/user"
 	"github.com/markdicksonjr/nibbler/user/auth/local"
-	userSql "github.com/markdicksonjr/nibbler/user/database/sql"
 	"log"
+	"net/http"
 )
+
+type Extension struct {
+	nibbler.NoOpExtension
+	AuthExtension *local.Extension
+}
+
+func (s *Extension) GetName() string {
+	return "sample"
+}
+
+func (s *Extension) PostInit(context *nibbler.Application) error {
+	context.Router.HandleFunc("/api/ok", s.AuthExtension.EnforceLoggedIn(func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Header().Set("Content-Type", "application/json")
+		w.Write([]byte(`{"result": "OK"}`))
+	})).Methods("GET")
+	return nil
+}
 
 func main() {
 
 	// allocate configuration
-	config, err := nibbler.LoadConfiguration(nil)
+	config, err := nibbler.LoadConfiguration()
 
 	// any error is fatal at this point
 	if err != nil {
@@ -28,7 +46,7 @@ func main() {
 	// allocate the sql extension, with all models
 	sqlExtension := sql.Extension{
 		Models: []interface{}{
-			user.User{},
+			nibbler.User{},
 		},
 	}
 
@@ -78,7 +96,7 @@ func main() {
 		&sessionExtension,
 		&userLocalAuthExtension,
 		&sendgridExtension,
-		&core.Extension{
+		&Extension{
 			AuthExtension: &userLocalAuthExtension,
 		},
 	}); err != nil {
@@ -88,7 +106,7 @@ func main() {
 	// create a test user, if it does not exist
 	emailVal := "someone@example.com"
 	password, _ := local.GeneratePasswordHash("tester123")
-	_, _ = userExtension.Create(&user.User{
+	_, _ = userExtension.Create(&nibbler.User{
 		Email:    &emailVal,
 		Password: &password,
 	})

@@ -15,7 +15,7 @@ API Key.  Set it in the SENDGRID_API_KEY environment variable.  To build and run
 
 `cd public/vue && npm install && npm run build && cd -`
 
-`go run main.go`
+`PORT=3000 go run main.go`
 
 ## Configuration
 
