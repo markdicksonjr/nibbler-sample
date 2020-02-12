@@ -1,3 +1,2 @@
-/vendor
-/public/vue/dist
-/public/vue/node_modules
+/example/local-auth/public/vue/dist
+/example/local-auth/public/vue/node_modules

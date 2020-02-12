@@ -17,7 +17,6 @@ import (
 type Extension struct {
 	nibbler.NoOpExtension
 	AuthExtension    *local.Extension
-	SessionExtension *session.Extension
 	UserExtension    *user.Extension
 }
 
@@ -37,7 +36,7 @@ func (s *Extension) PostInit(context *nibbler.Application) error {
 	context.Router.HandleFunc("/api/ok", s.AuthExtension.EnforceLoggedIn(func(w http.ResponseWriter, r *http.Request) {
 
 		// get the user from the session
-		caller, err := s.SessionExtension.GetCaller(r)
+		caller, err := s.AuthExtension.SessionExtension.GetCaller(r)
 		if err != nil {
 			nibbler.Write500Json(w, err.Error())
 			return
@@ -81,7 +80,7 @@ func (s *Extension) PostInit(context *nibbler.Application) error {
 		}
 
 		// save the user back to the session
-		if err := s.SessionExtension.SetCaller(w, r, caller); err != nil {
+		if err := s.AuthExtension.SessionExtension.SetCaller(w, r, caller); err != nil {
 			nibbler.Write500Json(w, err.Error())
 			return
 		}
@@ -158,7 +157,6 @@ func main() {
 
 	sampleExtension := Extension{
 		AuthExtension:    &userLocalAuthExtension,
-		SessionExtension: &sessionExtension,
 		UserExtension:    &userExtension,
 	}
 
