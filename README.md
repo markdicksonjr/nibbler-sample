@@ -6,7 +6,6 @@ password, and email validation features out of the box.
 ## Requirements
 - Go v1.12+ (unless you want to try to build without mod)
 - SendGrid API key
-- Dep (optional)
 
 ## Getting Started
 

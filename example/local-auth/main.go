@@ -10,14 +10,13 @@ import (
 	"github.com/markdicksonjr/nibbler/session"
 	"github.com/markdicksonjr/nibbler/user"
 	"github.com/markdicksonjr/nibbler/user/auth/local"
-	"log"
 	"net/http"
 )
 
 type Extension struct {
 	nibbler.NoOpExtension
-	AuthExtension    *local.Extension
-	UserExtension    *user.Extension
+	AuthExtension *local.Extension
+	UserExtension *user.Extension
 }
 
 func (s *Extension) GetName() string {
@@ -71,7 +70,7 @@ func (s *Extension) PostInit(context *nibbler.Application) error {
 				return
 			}
 		}
-		ctx.Count+=2
+		ctx.Count += 2
 
 		c, _ := json.Marshal(ctx)
 		if c != nil {
@@ -100,40 +99,42 @@ func (s *Extension) PostInit(context *nibbler.Application) error {
 
 func main() {
 
-	// allocate configuration
+	// allocate our logger implementation that just uses Println
+	logger := nibbler.DefaultLogger{}
+
+	// allocate configuration, resolve env vars and config.json
 	config, err := nibbler.LoadConfiguration()
 
-	// any error is fatal at this point
-	if err != nil {
-		log.Fatal(err.Error())
-	}
+	// any error is fatal at this point, this calls log.Fatal if non-nil
+	nibbler.LogFatalNonNil(logger, err)
 
+	// override the default static directory to where our vue app builds
 	config.StaticDirectory = "./public/vue/dist"
 
-	// allocate the sql extension, with all models
+	// allocate the sql extension, with all ORM-capable models - this extension auto-migrates the DB when initialized
 	sqlExtension := sql.Extension{
 		Models: []interface{}{
 			nibbler.User{},
 		},
 	}
 
-	// allocate user extension, providing sql extension to it
+	// allocate user extension, providing sql extension to it - the user extension manages User CRUD
 	userExtension := user.Extension{
 		PersistenceExtension: &userSql.Extension{
 			SqlExtension: &sqlExtension,
 		},
 	}
 
-	// allocate session extension, using a sql connector
-	// our sql connector will use our sql extension and
-	// tie into the same DB as the operational database
+	// allocate session extension, using a sql connector - our sql connector will use our sql extension and tie into
+	// the same DB as the operational database.  Allow SESSION_SECRET/SESSION_MAXAGE/SESSION_COOKIE env vars or
+	// session.secret/session.maxage/session.cookie in the config.json file
 	sessionExtension := session.Extension{
 		StoreConnector: connectors.SqlStoreConnector{
 			SqlExtension:  &sqlExtension,
-			Secret:        "dumbsecret",
-			MaxAgeSeconds: 60 * 60 * 24 * 15, // 15 days
+			Secret:        config.Raw.Get("session", "secret").String("default_secret"),
+			MaxAgeSeconds: config.Raw.Get("session", "maxage").Int(60 * 60 * 24 * 15), // 15 days
 		},
-		SessionName: "dumbcookie",
+		SessionName: config.Raw.Get("session", "cookie").String("default_cookie"),
 	}
 
 	// allocate the sendgrid extension
@@ -141,48 +142,50 @@ func main() {
 
 	// allocate user local auth extension
 	userLocalAuthExtension := local.Extension{
-		SessionExtension:           &sessionExtension,
-		UserExtension:              &userExtension,
-		Sender:                     &sendgridExtension,
-		PasswordResetEnabled:       true,
-		PasswordResetFromName:      "Nibbler Sample",
-		PasswordResetFromEmail:     "noreply@nibblersample.com",
-		PasswordResetRedirect:      "http://localhost:3000/#/reset-password",
-		RegistrationEnabled:        true,
-		EmailVerificationEnabled:   true,
-		EmailVerificationFromName:  "Nibbler Sample",
-		EmailVerificationFromEmail: "noreply@nibblersample.com",
-		EmailVerificationRedirect:  "http://localhost:3000/#/verify-email",
+		SessionExtension:             &sessionExtension,
+		UserExtension:                &userExtension,
+		Sender:                       &sendgridExtension,
+		PasswordResetEnabled:         config.Raw.Get("passwordreset", "enabled").Bool(true),
+		PasswordResetFromName:        config.Raw.Get("passwordreset", "from", "name").String("Nibbler Sample"),
+		PasswordResetFromEmail:       config.Raw.Get("passwordreset", "from", "email").String("noreply@nibblersample.com"),
+		PasswordResetRedirect:        config.Raw.Get("passwordreset", "redirect").String("http://localhost:3000/#/reset-password"),
+		RegistrationEnabled:          config.Raw.Get("registration", "enabled").Bool(true),
+		RegistrationRequiresEmail:    config.Raw.Get("registration", "required", "email").Bool(true),
+		RegistrationRequiresUsername: config.Raw.Get("registration", "required", "username").Bool(false),
+		EmailVerificationEnabled:     config.Raw.Get("emailverification", "enabled").Bool(true),
+		EmailVerificationFromName:    config.Raw.Get("emailverification", "from", "name").String("Nibbler Sample"),
+		EmailVerificationFromEmail:   config.Raw.Get("emailverification", "from", "email").String("noreply@nibblersample.com"),
+		EmailVerificationRedirect:    config.Raw.Get("emailverification", "redirect").String("http://localhost:3000/#/verify-email"),
 	}
 
+	// allocate our app-specific extension, providing the auth extension and group extension - note that the user
+	// extension and others can be accessed through these extension instances
 	sampleExtension := Extension{
-		AuthExtension:    &userLocalAuthExtension,
-		UserExtension:    &userExtension,
+		AuthExtension: &userLocalAuthExtension,
+		UserExtension: &userExtension,
 	}
 
-	// initialize the application
+	// initialize the application, which initializes all extensions in the order they are provided
 	appContext := nibbler.Application{}
-	if err := appContext.Init(config, nibbler.DefaultLogger{}, []nibbler.Extension{
+	nibbler.LogFatalNonNil(logger, appContext.Init(config, logger, []nibbler.Extension{
 		&sqlExtension,
 		&userExtension,
 		&sessionExtension,
 		&userLocalAuthExtension,
 		&sendgridExtension,
 		&sampleExtension,
-	}); err != nil {
-		log.Fatal(err.Error())
-	}
+	}))
 
 	// create a test user, if it does not exist
 	emailVal := "someone@example.com"
+	usernameVal := "admin"
 	password, _ := local.GeneratePasswordHash("tester123")
 	_, _ = userExtension.Create(&nibbler.User{
 		Email:    &emailVal,
+		Username: &usernameVal,
 		Password: &password,
 	})
 
 	// run the app
-	if err = appContext.Run(); err != nil {
-		log.Fatal(err.Error())
-	}
+	nibbler.LogFatalNonNil(logger, appContext.Run())
 }
