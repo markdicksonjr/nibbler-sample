@@ -22,8 +22,8 @@ type SampleExtension struct {
 }
 
 func (s *SampleExtension) PostInit(app *nibbler.Application) error {
-	app.Router.HandleFunc("/api/group", s.AuthExtension.EnforceLoggedIn(s.UserGroupExtension.CreateGroupRequestHandler)).Methods("PUT")
-	app.Router.HandleFunc("/api/user/{id}/composite", s.AuthExtension.EnforceLoggedIn(s.UserGroupExtension.LoadUserCompositeRequestHandler)).Methods("GET", "POST")
+	app.Router.HandleFunc("/api/group", s.AuthExtension.SessionExtension.EnforceLoggedIn(s.UserGroupExtension.CreateGroupRequestHandler)).Methods("PUT")
+	app.Router.HandleFunc("/api/user/{id}/composite", s.AuthExtension.SessionExtension.EnforceLoggedIn(s.UserGroupExtension.LoadUserCompositeRequestHandler)).Methods("GET", "POST")
 
 	app.Router.HandleFunc("/api/auth", func(w http.ResponseWriter, r *http.Request) {
 		if err := s.AuthExtension.SessionExtension.SetCaller(w, r, s.AdminUser); err != nil {

@@ -32,7 +32,7 @@ func (s *Extension) PostInit(context *nibbler.Application) error {
 	// this adds the route "/api/ok" which increments a counter in protected context and a different counter in context
 	// after hitting this endpoint, send a request to "/api/user" to ensure you don't see the protected context but
 	// see the user-visible context.  Log out, log in, notice the result gets restored from the db
-	context.Router.HandleFunc("/api/ok", s.AuthExtension.EnforceLoggedIn(func(w http.ResponseWriter, r *http.Request) {
+	context.Router.HandleFunc("/api/ok", s.AuthExtension.SessionExtension.EnforceLoggedIn(func(w http.ResponseWriter, r *http.Request) {
 
 		// get the user from the session
 		caller, err := s.AuthExtension.SessionExtension.GetCaller(r)
