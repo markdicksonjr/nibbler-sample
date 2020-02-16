@@ -238,6 +238,8 @@ github.com/markdicksonjr/nibbler v0.14.0/go.mod h1:9eXJXNPtWGl8Kh0mHX7h8pq/OKmUe
 github.com/markdicksonjr/nibbler v0.20.1/go.mod h1:9eXJXNPtWGl8Kh0mHX7h8pq/OKmUedOCQhQI/fV1OKo=
 github.com/markdicksonjr/nibbler v0.20.2 h1:MjjXAgk6bNQQA3UFnJ5PeXg7l+wHLJUdfjrEWpPPBHc=
 github.com/markdicksonjr/nibbler v0.20.2/go.mod h1:9eXJXNPtWGl8Kh0mHX7h8pq/OKmUedOCQhQI/fV1OKo=
+github.com/markdicksonjr/nibbler v0.20.3 h1:ofh4kzL8iuPubG+t7vUFTUCEgyz9PsRw4lWOdT8LvFg=
+github.com/markdicksonjr/nibbler v0.20.3/go.mod h1:9eXJXNPtWGl8Kh0mHX7h8pq/OKmUedOCQhQI/fV1OKo=
 github.com/markdicksonjr/nibbler-mail-outbound v0.0.3 h1:dPC6jccaIsO16ZcwjXcH/4QjWq9XqXoPI4YoZNQaoYU=
 github.com/markdicksonjr/nibbler-mail-outbound v0.0.3/go.mod h1:rw6mpYiUMX+Q0zJ9v3VmbvJnRx3HOAiaG5xWOtjCAGg=
 github.com/markdicksonjr/nibbler-sql v0.0.8 h1:fOFrFckWIar+qJ/qh0kKCgOmJuZuXpvPqUUDrE0e8zo=

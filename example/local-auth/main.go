@@ -7,6 +7,7 @@ import (
 	sql "github.com/markdicksonjr/nibbler-sql"
 	"github.com/markdicksonjr/nibbler-sql/session"
 	userSql "github.com/markdicksonjr/nibbler-sql/user"
+	"github.com/markdicksonjr/nibbler/build"
 	"github.com/markdicksonjr/nibbler/session"
 	"github.com/markdicksonjr/nibbler/user"
 	"github.com/markdicksonjr/nibbler/user/auth/local"
@@ -101,6 +102,10 @@ func main() {
 
 	// allocate our logger implementation that just uses Println
 	logger := nibbler.DefaultLogger{}
+
+	if build.GitTag != "" {
+		logger.Info("running nibbler-sample v" + build.GitTag)
+	}
 
 	// allocate configuration, resolve env vars and config.json
 	config, err := nibbler.LoadConfiguration()
