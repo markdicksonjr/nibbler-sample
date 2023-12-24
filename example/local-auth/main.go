@@ -12,6 +12,7 @@ import (
 	"github.com/markdicksonjr/nibbler/user"
 	"github.com/markdicksonjr/nibbler/user/auth/local"
 	"net/http"
+	"strconv"
 )
 
 type Extension struct {
@@ -71,7 +72,7 @@ func (s *Extension) PostInit(context *nibbler.Application) error {
 				return
 			}
 		}
-		ctx.Count += 2
+		ctx.Count ++
 
 		c, _ := json.Marshal(ctx)
 		if c != nil {
@@ -93,7 +94,7 @@ func (s *Extension) PostInit(context *nibbler.Application) error {
 
 		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-Type", "application/json")
-		w.Write([]byte(`{"result": "OK"}`))
+		w.Write([]byte(`{"result": "OK", "count": ` + strconv.Itoa(ctx.Count) + `}`))
 	})).Methods("GET")
 	return nil
 }
@@ -181,7 +182,7 @@ func main() {
 		&sampleExtension,
 	}))
 
-	// create a test user, if it does not exist
+	// create a test admin user
 	emailVal := "someone@example.com"
 	usernameVal := "admin"
 	password, _ := local.GeneratePasswordHash("tester123")
