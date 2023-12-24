@@ -13,7 +13,8 @@
                 </i-col>
             </i-row>
         </Content>
-    <Footer></Footer>
+        <Footer></Footer>
+    </Layout>
 </template>
 
 <script>
@@ -52,7 +53,7 @@
                 }
             }).catch(err => {
                 this.$Spin.hide();
-                this.status.error = "please try again"
+                this.status.error = "please try again, err = " + err;
             });
         }
     }

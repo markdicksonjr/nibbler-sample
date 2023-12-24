@@ -37,10 +37,11 @@
           <Card>
             {{$t("message.registration_complete")}}
           </Card>
-          <i-col>
+        </i-col>
       </i-row>
     </Content>
     <Footer></Footer>
+  </Layout>
 </template>
 
 <script>
@@ -80,7 +81,7 @@
             }
           }).catch(err => {
             this.$Spin.hide();
-            this.status.error = "please try again"
+            this.status.error = "please try again, err = " + err;
           });
         } else {
           this.status.error = "an email must be present"

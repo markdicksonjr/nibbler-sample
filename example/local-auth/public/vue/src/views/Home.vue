@@ -4,6 +4,7 @@
     <Content>
       <h1>{{$t("message.welcome")}}</h1>
     </Content>
+  </Layout>
 </template>
 
 <style scoped>

@@ -38,6 +38,7 @@
       </i-row>
     </Content>
     <Footer></Footer>
+  </Layout>
 </template>
 
 <script>
@@ -79,7 +80,7 @@
             }
           }).catch(err => {
             this.$Spin.hide();
-            this.status.error = "please try again"
+            this.status.error = "please try again, err = " + err;
           });
         } else {
           this.status.error = "a username and password must be present"

@@ -40,7 +40,7 @@
           <Card>
             {{$t("message.registration_complete")}}
           </Card>
-        <i-col>
+        </i-col>
       </i-row>
     </Content>
     <Footer></Footer>
@@ -85,7 +85,7 @@
             }
           }).catch(err => {
             this.$Spin.hide();
-            this.status.error = "please try again"
+            this.status.error = "please try again, err = " + err;
           });
         } else {
           this.status.error = "An email and password must be present"
